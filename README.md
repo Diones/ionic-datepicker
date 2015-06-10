@@ -37,7 +37,7 @@ angular.module('mainModuleName', ['ionic', 'ionic-datepicker']){
 }
 ````
 
-4) DatePicker 0ptions
+4) DatePicker options
 
 ````
 	date:            init date               ** Required
