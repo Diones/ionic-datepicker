@@ -1,6 +1,8 @@
 ##Introduction:
 
-This is a `ionic-datepicker` bower component which can be used with any Ionic framework's application.
+To install `ionic-datepicker` from this fork, utilize **`bower install ionic-datepicker-dfandrade`**.
+
+**ORIGINAL:** This is a `ionic-datepicker` bower component which can be used with any Ionic framework's application.
 
 [View Demo](http://rajeshwarpatlolla.github.io/DatePickerForIonicFramework/demo/ "Demo") 
 
@@ -13,7 +15,7 @@ This is a `ionic-datepicker` bower component which can be used with any Ionic fr
 
 1) In your project repository install the ionic date picker using bower
 
-    bower install ionic-datepicker --save
+    bower install ionic-datepicker-dfandrade --save
     
 2) Then you can see the following directory structure see in your project folder
 
@@ -22,10 +24,10 @@ This is a `ionic-datepicker` bower component which can be used with any Ionic fr
 Give the path of  `style.css, templates.js and ionic-datepicker.js` in your `index.html` file.
 
 ````html
-<link href="lib/ionic-datepicker/dist/style.css" rel="stylesheet"> 
+<link href="lib/ionic-datepicker-dfandrade/dist/style.css" rel="stylesheet"> 
 <!-- path to ionic/angularjs js -->
-<script src="lib/ionic-datepicker/dist/templates.js"></script>
-<script src="lib/ionic-datepicker/dist/ionic-datepicker.js"></script>
+<script src="lib/ionic-datepicker-dfandrade/dist/templates.js"></script>
+<script src="lib/ionic-datepicker-dfandrade/dist/ionic-datepicker.js"></script>
 ````    
     
 3) In your application module inject the dependency `ionic-datepicker`, in order to work with the ionic time picker
@@ -35,25 +37,29 @@ angular.module('mainModuleName', ['ionic', 'ionic-datepicker']){
 }
 ````
 
-4) Use the below format in your template's corresponding controller
+4) DatePicker 0ptions
 
-````javascript
-$scope.currentDate = new Date();
+````
+	date:            init date               ** Required
+    min-date:        minimum date            (Default: null)
+    max-date:        maximum date            (Default: null)
+    popup-title:     Popup title             (Default: 'Select date')
+    btn-close-text:  button close label      (Default: 'Close')
+    btn-set-text:    button set label        (Default: 'Set')
+    btn-today-text:  button today label      (Default: 'Today')
+    btn-close-type:  button close design     (Default: 'button-default')
+    btn-set-type:    button set design       (Default: 'button-positive')
+    btn-today-type:  button today design     (Default: 'button-default')
+    btn-today-show:  show/hide today button  (Default: true)
 ````
 
 5) Then use the below format in your template / html file
 
 ````html
-<ionic-datepicker idate="currentDate" disablepreviousdates="true">
-    <button class="button button-block button-positive"> {{ currentDate | date:'dd - MMMM - yyyy' }} </button>
+<ionic-datepicker date="myDate" min-date="minDate" max-date="maxDate" popup-title="{{'POPUP_TITLE' | translate}}" btn-close-text="{{'BTN_CLOSE' | translate}}" btn-set-text="{{'BTN_SET' | translate}}" btn-set-type="button-dark" btn-today-show="false">
+	<button class="button button-outline icon-left ion-android-calendar button-balanced"> {{ myDate | date : 'mediumDate' }} </button>
 </ionic-datepicker>
 ````
-
-
-a) `ionic-datepicker` is the directive, to which we can pass required vales.
-
-b) `idate` takes date object. If we don't pass any value, the default value will be `new Date()`.
-c) `disablepreviousdates` takes true or false. `true` disables the past dates, and `false` doesn't.
 
 ##Screen Shots:
 
@@ -69,14 +75,25 @@ Once you click on the button you should see the second screen shot.
 
 ### 1) v0.1.0
 The whole date picker functionality has been implemented, and can be installed with  `bower install ionic-datepicker --save`
+
 ### 2) v0.1.1
 Bug Fix. This is the latest version of `ionic-datepicker` component.
+
 ### 3) v0.1.2
 Bug Fix. If we don't pass the date to the time picker it will pick the todays date by default.
+
 ### 4) v0.1.3
 [Bug Fix](http://forum.ionicframework.com/t/ionic-datepicker-bower-component-for-ionic-framework-applications/21516/14)
+
 ### 5) v0.2.0
 Disabling previous dates functionality added.
+
+### 6) v1.0.0
+* Attributes have been modified.
+* Option for popup title and buttons label.
+* Option for button design (color, type).
+* Option show/hide today button.
+* Option min/max date.
 
 ##License:
 [MIT](https://github.com/rajeshwarpatlolla/ionic-datepicker/blob/master/LICENSE.MD "MIT")
@@ -91,3 +108,8 @@ twitter : https://twitter.com/rajeshwar_9032
 facebook : https://www.facebook.com/rajeshwarpatlolla
 
 paypal : rajeshwar.patlolla@gmail.com
+
+gmail : diones.andrade@gmail.com
+
+
+

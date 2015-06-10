@@ -4,12 +4,16 @@
   "description": "A date picker for IONIC framework",
   "main": "",
   "scripts": {},
-  "author": "https://github.com/rajeshwarpatlolla, rajeshwar.patlolla@gmail.com",
+  "authors": [
+    "rajeshwarpatlolla <rajeshwar.patlolla@gmail.com>",
+    "dionesandrade <diones.andrade@gmail.com>"
+  ],
   "license": "MIT",
   "dependencies": {
-    "gulp-clean": "^0.3.1"
+    "ionic": "~1.0.0"
   },
   "devDependencies": {
+    "gulp-clean": "^0.3.1",
     "gulp": "~3.8.11",
     "gulp-ng-html2js": "~0.1.8",
     "gulp-concat": "~2.4.3",

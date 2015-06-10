@@ -1,149 +1,217 @@
 //By Rajeshwar Patlolla
 //https://github.com/rajeshwarpatlolla
 
-"use strict";
 angular.module('ionic-datepicker', ['ionic', 'ionic-datepicker.templates'])
 
-  .directive('ionicDatepicker', ['$ionicPopup', function ($ionicPopup) {
+.directive('ionicDatepicker', ['$ionicPopup', '$filter', function($ionicPopup, $filter) {
     return {
-      restrict: 'AE',
-      replace: true,
-      scope: {
-        ipDate: '=idate',
-        disablePreviousDates : '=disablepreviousdates'
-      },
-      link: function (scope, element, attrs) {
+        restrict: 'AE',
+        replace: true,
+        scope: {
+            date: '=',
+            minDate: '=',
+            maxDate: '=',
+            popupTitle: '@',
+            btnSetText: '@',
+            btnSetType: '@',
+            btnCloseText: '@',
+            btnCloseType: '@',
+            btnTodayShow: '@',
+            btnTodayText: '@',
+            btnTodayType: '@'
+        },
+        link: function(scope, element, attrs) {
 
-        var monthsList = ["January", "February", "March", "April", "May", "June", "July",
-          "August", "September", "October", "November", "December"];
+            element.on("click", function() {
 
-        if(!scope.ipDate){
-          scope.ipDate = new Date();
-        }
+                scope.datePicker = {
+                    date: new Date(scope.date.getTime()),
+                    minDate: null,
+                    maxDate: null,
+                    popupTitle: angular.isDefined(scope.popupTitle) ? scope.popupTitle : 'Select date',
+                    btnCloseText: angular.isDefined(scope.btnCloseText) ? scope.btnCloseText : 'Close',
+                    btnSetText: angular.isDefined(scope.btnSetText) ? scope.btnSetText : 'Set',
+                    btnTodayText: angular.isDefined(scope.btnTodayText) ? scope.btnTodayText : 'Today',
+                    btnCloseType: angular.isDefined(scope.btnCloseType) ? scope.btnCloseType : 'button-default',
+                    btnSetType: angular.isDefined(scope.btnSetType) ? scope.btnSetType : 'button-positive',
+                    btnTodayType: angular.isDefined(scope.btnTodayType) ? scope.btnTodayType : 'button-default',
+                    btnTodayShow: angular.isDefined(scope.btnTodayShow) ? scope.btnTodayShow === "true" : true
+                }
 
-        scope.previousDayEpoch = (+(new Date()) - 86400000);
-        var currentDate = angular.copy(scope.ipDate);
+                function normalizeTime(dt) {
+                    dt.setHours(0);
+                    dt.setMinutes(0);
+                    dt.setSeconds(0);
+                    dt.setMilliseconds(0);
+                }
 
-        scope.weekNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+                scope.datePicker.today = new Date();
 
-        scope.today = {};
-        scope.today.dateObj = new Date();
-        scope.today.date = (new Date()).getDate();
-        scope.today.month = (new Date()).getMonth();
-        scope.today.year = (new Date()).getFullYear();
+                normalizeTime(scope.datePicker.date);
+                normalizeTime(scope.datePicker.today);
 
-        var refreshDateList = function (current_date) {
-          scope.selctedDateString = (new Date(current_date)).toString();
-          currentDate = angular.copy(current_date);
+                if (angular.isDefined(scope.minDate)) {
+                    scope.datePicker.minDate = new Date(scope.minDate.getTime());
+                    normalizeTime(scope.datePicker.minDate);
+                }
 
-          var firstDay = new Date(current_date.getFullYear(), current_date.getMonth(), 1).getDate();
-          var lastDay = new Date(current_date.getFullYear(), current_date.getMonth() + 1, 0).getDate();
+                if (angular.isDefined(scope.maxDate)) {
+                    scope.datePicker.maxDate = new Date(scope.maxDate.getTime());
+                    normalizeTime(scope.datePicker.maxDate);
+                }
 
-          scope.dayList = [];
+                scope.datePicker.dateSelected = new Date(scope.datePicker.date.getTime());
 
-          for (var i = firstDay; i <= lastDay; i++) {
-            var tempDate = new Date(current_date.getFullYear(), current_date.getMonth(), i);
-            scope.dayList.push({
-              date: tempDate.getDate(),
-              month: tempDate.getMonth(),
-              year: tempDate.getFullYear(),
-              day: tempDate.getDay(),
-              dateString: tempDate.toString(),
-              epochLocal: tempDate.getTime(),
-              epochUTC: (tempDate.getTime() + (tempDate.getTimezoneOffset() * 60 * 1000))
+                scope.datePicker.weekNames = [];
+
+                var weekNamesGen = new Date('October 12, 2019 22:45:00');
+                for (var weekDay = 0; weekDay < 7; weekDay++) {
+                    weekNamesGen.setDate(weekNamesGen.getDate() + 1);
+                    var weekDayName = $filter('date')(weekNamesGen, 'EEE');
+                    scope.datePicker.weekNames.push(weekDayName);
+                }
+
+                scope.updateWeeks = function() {
+
+                    scope.datePicker.weeks = [];
+                    var datePickerMonth = new Date(scope.datePicker.date.getTime());
+
+                    datePickerMonth.setDate(1);
+
+                    var firstDayMonthWeekName = $filter('date')(datePickerMonth, 'EEE');
+                    var days = [];
+                    var daysFillingComplete = false;
+                    for (var i = 0; i < scope.datePicker.weekNames.length && !daysFillingComplete; i++) {
+                        if (scope.datePicker.weekNames[i] == firstDayMonthWeekName) {
+                            daysFillingComplete = true;
+                        } else {
+                            days.push(null);
+                        }
+                    }
+
+                    var currentDatePickerMonth = datePickerMonth.getMonth();
+                    while (currentDatePickerMonth == datePickerMonth.getMonth()) {
+                        if (days.length == scope.datePicker.weekNames.length) {
+                            scope.datePicker.weeks.push(days.slice());
+                            days = [];
+                        }
+
+                        days.push(new Date(datePickerMonth.getTime()));
+                        datePickerMonth.setDate(datePickerMonth.getDate() + 1);
+                    }
+
+                    if (days.length > 0) {
+                        for (var i = days.length; i < scope.datePicker.weekNames.length; i++) {
+                            days.push(null);
+                        }
+                        scope.datePicker.weeks.push(days);
+                    }
+                }
+
+                scope.updateWeeks();
+
+                scope.isToday = function(day) {
+                    return day != null && day.getTime() == scope.datePicker.today.getTime();
+                }
+
+                scope.isSelected = function(day) {
+                    return day != null && day.getTime() == scope.datePicker.dateSelected.getTime();
+                }
+
+                scope.prevMonthAllowed = function() {
+                    var prevMonthAllowed = true;
+                    if (scope.datePicker.minDate != null && scope.datePicker.date.getMonth() <= scope.datePicker.minDate.getMonth()) {
+                        prevMonthAllowed = false;
+                    }
+                    return prevMonthAllowed;
+                }
+
+                scope.nextMonthAllowed = function() {
+                    var nextMonthAllowed = true;
+                    if (scope.datePicker.maxDate != null && scope.datePicker.date.getMonth() >= scope.datePicker.maxDate.getMonth()) {
+                        nextMonthAllowed = false;
+                    }
+                    return nextMonthAllowed;
+                }
+
+                scope.dayAllowed = function(day) {
+                    var dayAllowed = true;
+
+                    if (day != null) {
+                        if (scope.datePicker.minDate != null && day.getTime() < scope.datePicker.minDate.getTime()) {
+                            dayAllowed = false;
+                        } else if (scope.datePicker.maxDate != null && day.getTime() > scope.datePicker.maxDate.getTime()) {
+                            dayAllowed = false;
+                        }
+                    }
+
+                    return dayAllowed;
+                }
+
+                scope.prevMonth = function() {
+                    scope.datePicker.date.setMonth(scope.datePicker.date.getMonth() - 1);
+                    scope.updateWeeks();
+                }
+
+                scope.nextMonth = function() {
+                    scope.datePicker.date.setMonth(scope.datePicker.date.getMonth() + 1);
+                    scope.updateWeeks();
+                }
+
+                scope.selectDate = function(day) {
+                    if (day != null && scope.dayAllowed(day)) {
+                        scope.datePicker.dateSelected = day;
+
+                        var updateWeeks = scope.datePicker.date.getMonth() != day.getMonth();
+
+                        if (updateWeeks) {
+                            scope.datePicker.date = new Date(day.getTime());
+                            scope.updateWeeks();
+                        }
+                    }
+                }
+
+                var popupButtons = [];
+
+                popupButtons.push({
+                    text: scope.datePicker.btnCloseText,
+                    type: scope.datePicker.btnCloseType
+                });
+
+                if (scope.datePicker.btnTodayShow) {
+                    popupButtons.push({
+                        text: scope.datePicker.btnTodayText,
+                        type: scope.datePicker.btnTodayType,
+
+                        onTap: function(e) {
+
+                            e.preventDefault();
+
+                            scope.datePicker.today = new Date();
+
+                            normalizeTime(scope.datePicker.today);
+
+                            scope.selectDate(new Date(scope.datePicker.today.getTime()));
+                        }
+                    });
+                }
+
+                popupButtons.push({
+                    text: scope.datePicker.btnSetText,
+                    type: scope.datePicker.btnSetType,
+                    onTap: function(e) {
+                        scope.date = scope.datePicker.dateSelected;
+                    }
+                });
+
+                $ionicPopup.show({
+                    templateUrl: 'date-picker-modal.html',
+                    title: '<strong>' + scope.datePicker.popupTitle + '</strong>',
+                    subTitle: '',
+                    scope: scope,
+                    buttons: popupButtons
+                })
             });
-          }
-
-          var firstDay = scope.dayList[0].day;
-
-          scope.currentMonthFirstDayEpoch = scope.dayList[0].epochLocal;
-
-          for (var j = 0; j < firstDay; j++) {
-            scope.dayList.unshift({});
-          }
-
-          scope.rows = [];
-          scope.cols = [];
-
-          scope.currentMonth = monthsList[current_date.getMonth()];
-          scope.currentYear = current_date.getFullYear();
-
-          scope.numColumns = 7;
-          scope.rows.length = 6;
-          scope.cols.length = scope.numColumns;
-
-        };
-
-        scope.prevMonth = function () {
-          if (currentDate.getMonth() === 1) {
-            currentDate.setFullYear(currentDate.getFullYear());
-          }
-          currentDate.setMonth(currentDate.getMonth() - 1);
-
-          scope.currentMonth = monthsList[currentDate.getMonth()];
-          scope.currentYear = currentDate.getFullYear();
-
-          refreshDateList(currentDate)
-        };
-
-        scope.nextMonth = function () {
-          if (currentDate.getMonth() === 11) {
-            currentDate.setFullYear(currentDate.getFullYear());
-          }
-          currentDate.setMonth(currentDate.getMonth() + 1);
-
-          scope.currentMonth = monthsList[currentDate.getMonth()];
-          scope.currentYear = currentDate.getFullYear();
-
-          refreshDateList(currentDate)
-        };
-
-        scope.date_selection = {selected: false, selectedDate: '', submitted: false};
-
-        scope.dateSelected = function (date) {
-          scope.selctedDateString = date.dateString;
-          scope.date_selection.selected = true;
-          scope.date_selection.selectedDate = new Date(date.dateString);
-        };
-
-        element.on("click", function () {
-          if (!scope.ipDate) {
-            var defaultDate = new Date();
-            refreshDateList(defaultDate);
-          } else {
-            refreshDateList(angular.copy(scope.ipDate));
-          }
-
-          $ionicPopup.show({
-            templateUrl: 'date-picker-modal.html',
-            title: '<strong>Select Date</strong>',
-            subTitle: '',
-            scope: scope,
-            buttons: [
-              {text: 'Close'},
-              {
-                text: 'Today',
-                onTap: function (e) {
-                  refreshDateList(new Date());
-                  e.preventDefault();
-                }
-              },
-              {
-                text: 'Set',
-                type: 'button-positive',
-                onTap: function (e) {
-                  scope.date_selection.submitted = true;
-
-                  if (scope.date_selection.selected === true) {
-                    scope.ipDate = angular.copy(scope.date_selection.selectedDate);
-                  } else {
-                    e.preventDefault();
-                  }
-                }
-              }
-            ]
-          })
-        })
-      }
+        }
     }
-  }]);
+}]);
