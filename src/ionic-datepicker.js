@@ -120,7 +120,7 @@ angular.module('ionic-datepicker', ['ionic', 'ionic-datepicker.templates'])
 
                 scope.prevMonthAllowed = function() {
                     var prevMonthAllowed = true;
-                    if (scope.datePicker.minDate != null && scope.datePicker.date.getMonth() <= scope.datePicker.minDate.getMonth()) {
+                    if (scope.datePicker.minDate != null && scope.datePicker.date.getFullYear() <= scope.datePicker.minDate.getFullYear() && scope.datePicker.date.getMonth() <= scope.datePicker.minDate.getMonth()) {
                         prevMonthAllowed = false;
                     }
                     return prevMonthAllowed;
@@ -128,7 +128,7 @@ angular.module('ionic-datepicker', ['ionic', 'ionic-datepicker.templates'])
 
                 scope.nextMonthAllowed = function() {
                     var nextMonthAllowed = true;
-                    if (scope.datePicker.maxDate != null && scope.datePicker.date.getMonth() >= scope.datePicker.maxDate.getMonth()) {
+                    if (scope.datePicker.maxDate != null && scope.datePicker.date.getFullYear() >= scope.datePicker.maxDate.getFullYear() && scope.datePicker.date.getMonth() >= scope.datePicker.maxDate.getMonth()) {
                         nextMonthAllowed = false;
                     }
                     return nextMonthAllowed;
