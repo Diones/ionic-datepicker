@@ -95,7 +95,7 @@ Disabling previous dates functionality added.
 * Option show/hide today button.
 * Option min/max date.
 
-### 3) v1.0.1
+### 7) v1.0.1
 Bug Fix. Calendar was not validating the min-date and max-date options.
 
 ##License:
