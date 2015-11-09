@@ -98,6 +98,9 @@ Disabling previous dates functionality added.
 ### 7) v1.0.1
 Bug Fix. Calendar was not validating the min-date and max-date options.
 
+### 8) v1.0.2
+Fixing ionic version dependency.
+
 ##License:
 [MIT](https://github.com/rajeshwarpatlolla/ionic-datepicker/blob/master/LICENSE.MD "MIT")
 
