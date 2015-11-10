@@ -9,7 +9,7 @@
 </div>
 <div>
     <div class="row no_padding">
-        <div class="col" ng-repeat="weekName in datePicker.weekNames track by $index" style="font-weight: bold"> {{ weekName | limitTo : 2 }}</div>
+        <div class="col no_padding" ng-repeat="weekName in datePicker.weekNames track by $index" style="text-align: center; font-weight: bold"> {{ weekName }}</div>
     </div>
     <div>
         <div class="row" ng-repeat="week in datePicker.weeks track by $index" style="text-align: center;">

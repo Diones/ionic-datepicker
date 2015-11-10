@@ -104,6 +104,9 @@ Fixing ionic version dependency.
 ### 9) v1.0.3
 CSS change: 'selected day' and 'today' background's set to be rounded.
 
+### 10) v1.0.4
+Weeknames changed from 2 to 3 chars and centered.
+
 ##License:
 [MIT](https://github.com/rajeshwarpatlolla/ionic-datepicker/blob/master/LICENSE.MD "MIT")
 
