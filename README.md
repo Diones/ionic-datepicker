@@ -101,6 +101,9 @@ Bug Fix. Calendar was not validating the min-date and max-date options.
 ### 8) v1.0.2
 Fixing ionic version dependency.
 
+### 9) v1.0.3
+CSS change: 'selected day' and 'today' background's set to be rounded.
+
 ##License:
 [MIT](https://github.com/rajeshwarpatlolla/ionic-datepicker/blob/master/LICENSE.MD "MIT")
 

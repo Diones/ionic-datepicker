@@ -4,6 +4,7 @@
 
 .date_col:active {
     background-color: rgba(56, 126, 245, 1);
+    border-radius: 50%;
     cursor: pointer;
 }
 
@@ -17,10 +18,12 @@
 
 .today {
     background-color: rgba(186, 186, 186, 1);
+    border-radius: 50%;
 }
 
 .date_selected {
     background-color: rgba(56, 126, 245, 0.8);
+    border-radius: 50%;
 }
 
 .pointer_events_none {
